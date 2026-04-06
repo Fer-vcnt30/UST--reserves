@@ -71,30 +71,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .auth-switch {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .auth-switch button {
-            flex: 1;
-        }
-
-        .auth-secondary {
-            background: #dff3f1;
-            color: var(--primary-dark);
-        }
-
-        .auth-secondary:hover {
-            background: #cfecea;
-        }
-
-        .auth-secondary.active {
-            background: var(--secondary);
-            color: white;
-        }
-
         .login-form, .register-form {
             max-width: 500px;
             margin: 0 auto;
@@ -140,6 +116,25 @@
 
         .btn-neutral { background-color: #7f8c8d; }
         .btn-neutral:hover { background-color: #6c7a7b; }
+
+        .link-button {
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            font-size: 0.92rem;
+            font-weight: 600;
+            padding: 0;
+            min-height: auto;
+            width: auto;
+            text-decoration: underline;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        .link-button:hover {
+            background: none;
+            color: var(--secondary);
+        }
 
         .admin-table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
@@ -338,27 +333,6 @@
             margin-top: 1rem;
         }
 
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-soft);
-            font-style: italic;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #ccc;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
         hr {
             border: none;
             border-top: 1px solid #dbe8e8;
@@ -381,7 +355,6 @@
             .reserva-item button, button { width: 100%; }
             .modal-content { width: 100%; padding: 1.2rem; }
             th, td { font-size: 0.75rem; padding: 8px; }
-            .auth-switch { flex-direction: column; }
         }
     </style>
 </head>
@@ -396,17 +369,13 @@
     <!-- LOGIN / REGISTRO -->
     <div id="view-login" class="view active">
         <div class="card">
-            <div class="auth-switch">
-                <button id="btn-show-login" class="auth-secondary active" onclick="mostrarPanelAuth('login')">Iniciar sesión</button>
-                <button id="btn-show-register" class="auth-secondary" onclick="mostrarPanelAuth('registro')">Registrarse</button>
-            </div>
-
             <div id="panel-login">
                 <h2 style="text-align:center">Acceso de usuarios</h2>
                 <div class="login-form">
                     <input type="email" id="email" placeholder="Correo institucional">
                     <input type="password" id="pass" placeholder="Contraseña">
                     <button onclick="handleLogin()">Entrar</button>
+                    <button class="link-button" onclick="mostrarPanelAuth('registro')">Registrarse</button>
                     <p style="text-align:center; font-size:0.8rem; color:#888">
                         Admin: admin@u.cl | Pass: admin123<br>
                         Estudiantes: @alumnos.santotomas.cl<br>
@@ -424,6 +393,7 @@
                     <input type="password" id="reg-pass" placeholder="Contraseña">
                     <input type="password" id="reg-pass2" placeholder="Confirmar contraseña">
                     <button onclick="handleRegister()">Crear cuenta</button>
+                    <button class="link-button" onclick="mostrarPanelAuth('login')">Volver a iniciar sesión</button>
 
                     <div class="info-box">
                         <b>Tipos de registro permitidos:</b><br>
@@ -447,16 +417,14 @@
             </div>
 
             <div class="info-turnos">
-                Puedes reservar máximo <b>2 bloques por día</b>. Cada integrante también puede participar en máximo <b>2 reservas diarias</b>. Si un RUT ya existe en el sistema, el nombre debe coincidir.
+                Puedes reservar máximo <b>2 bloques por día</b>. Cada integrante también puede participar en máximo <b>2 reservas diarias</b>. Si un RUT ya existe en el sistema, se validará usando <b>primer nombre + primer apellido</b>.
             </div>
 
             <div id="aviso-limite-turnos" class="aviso-reserva" style="display:none;">
                 Has alcanzado el máximo de 2 reservas por hoy.
             </div>
 
-            <div id="lista-salas" class="sala-grid" style="margin-top:1.5rem;">
-                <div class="loading"><span class="spinner"></span>Cargando salas...</div>
-            </div>
+            <div id="lista-salas" class="sala-grid" style="margin-top:1.5rem;"></div>
 
             <div id="section-mis-reservas" style="margin-top:2rem; display:none;">
                 <h4>Mis Reservas para Hoy:</h4>
@@ -517,7 +485,7 @@
                         <li>Dejar limpio y ordenado al terminar.</li>
                         <li>No exceder la capacidad permitida.</li>
                         <li>Cancelar la reserva si no la usarás.</li>
-                        <li>El nombre debe coincidir con el registrado para cada RUT.</li>
+                        <li>Se valida coincidencia por primer nombre y primer apellido para cada RUT.</li>
                     </ul>
                 </div>
 
@@ -584,8 +552,6 @@
     let reservasHoy = [];
     let currentUser = null;
     let salaSeleccionada = 0;
-
-    // Usuarios locales registrados en el navegador
     let usuariosRegistrados = JSON.parse(localStorage.getItem("ust_usuarios_registrados")) || [];
 
     async function fetchReservas() {
@@ -618,19 +584,13 @@
     function mostrarPanelAuth(tipo) {
         const panelLogin = document.getElementById("panel-login");
         const panelRegister = document.getElementById("panel-register");
-        const btnLogin = document.getElementById("btn-show-login");
-        const btnRegister = document.getElementById("btn-show-register");
 
         if (tipo === "login") {
             panelLogin.style.display = "block";
             panelRegister.style.display = "none";
-            btnLogin.classList.add("active");
-            btnRegister.classList.remove("active");
         } else {
             panelLogin.style.display = "none";
             panelRegister.style.display = "block";
-            btnLogin.classList.remove("active");
-            btnRegister.classList.add("active");
         }
     }
 
@@ -644,8 +604,12 @@
         return limpio.slice(0, -1) + "-" + limpio.slice(-1);
     }
 
-    function normalizarNombre(nombre) {
-        return nombre.trim().replace(/\s+/g, " ").toUpperCase();
+    function getNombreBase(nombre) {
+        const limpio = nombre.trim().replace(/\s+/g, " ");
+        const partes = limpio.split(" ").filter(Boolean);
+        if (partes.length === 0) return "";
+        if (partes.length === 1) return partes[0].toUpperCase();
+        return `${partes[0]} ${partes[1]}`.toUpperCase();
     }
 
     function determinarTipoUsuario(email) {
@@ -674,7 +638,6 @@
                 }
             }
         }
-
         return null;
     }
 
@@ -707,7 +670,7 @@
         }
 
         const rutNormalizado = normalizarRut(rut);
-        const nombreNormalizado = normalizarNombre(nombre);
+        const nombreBase = getNombreBase(nombre);
 
         if (buscarUsuarioPorEmail(email)) {
             alert("Ese correo ya está registrado.");
@@ -721,14 +684,14 @@
         }
 
         const nombreExistente = getNombreRegistradoPorRut(rutNormalizado);
-        if (nombreExistente && normalizarNombre(nombreExistente) !== nombreNormalizado) {
+        if (nombreExistente && getNombreBase(nombreExistente) !== nombreBase) {
             alert("Ese RUT ya está asociado a otro nombre.");
             return;
         }
 
         usuariosRegistrados.push({
             nombre: nombre.trim(),
-            nombreNormalizado,
+            nombreBase,
             rut: formatearRut(rut),
             rutNormalizado,
             email,
@@ -912,11 +875,11 @@
                 }
 
                 const rutNormalizado = normalizarRut(rut);
-                const nombreNormalizado = normalizarNombre(nombre);
+                const nombreBase = getNombreBase(nombre);
                 const nombreRegistrado = getNombreRegistradoPorRut(rutNormalizado);
 
-                if (nombreRegistrado && normalizarNombre(nombreRegistrado) !== nombreNormalizado) {
-                    alert(`El nombre del integrante ${i} no coincide con el nombre ya registrado para ese RUT.`);
+                if (nombreRegistrado && getNombreBase(nombreRegistrado) !== nombreBase) {
+                    alert(`El nombre del integrante ${i} no coincide con el nombre registrado para ese RUT.`);
                     return null;
                 }
 
@@ -1064,9 +1027,12 @@
     }
 
     document.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && document.getElementById('view-login').classList.contains('active')) {
-            const loginVisible = document.getElementById('panel-login').style.display !== 'none';
-            if (loginVisible) handleLogin();
+        if (
+            e.key === 'Enter' &&
+            document.getElementById('view-login').classList.contains('active') &&
+            document.getElementById('panel-login').style.display !== 'none'
+        ) {
+            handleLogin();
         }
     });
 

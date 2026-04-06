@@ -21,333 +21,71 @@
             --success-bg: #e8f5e9;
             --success-border: #66bb6a;
             --accent: #2e7d32;
-            --info-bg: #e8f4fd;
-            --info-border: #b9def5;
         }
-
         * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: #eef6f5;
-            margin: 0;
-            color: var(--text-dark);
-        }
-
-        .navbar {
-            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: white;
-            padding: 1.2rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-        }
-
-        .navbar.admin-mode {
-            background: linear-gradient(180deg, #005248 0%, #00796b 100%);
-        }
-
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #eef6f5; margin: 0; color: var(--text-dark); }
+        .navbar { background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 1.2rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+        .navbar.admin-mode { background: linear-gradient(180deg, #005248 0%, #00796b 100%); }
         .navbar h1 { margin: 0; font-size: 1.8rem; }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-            border-top: 5px solid var(--primary);
-        }
-
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: var(--white); padding: 2rem; border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); margin-bottom: 2rem; border-top: 5px solid var(--primary); }
         .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-form, .register-form {
-            max-width: 500px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        input, select {
-            padding: 0.9rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            width: 100%;
-            background: #fcfefe;
-            transition: 0.2s;
-            min-height: 44px;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,150,136,0.15);
-        }
-
-        button {
-            padding: 0.9rem 1.2rem;
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: 0.2s;
-            min-height: 44px;
-        }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .login-form { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+        input, select { padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; width: 100%; background: #fcfefe; transition: 0.2s; min-height: 44px; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,150,136,0.15); }
+        button { padding: 0.9rem 1.2rem; background-color: var(--secondary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; min-height: 44px; }
         button:hover { background-color: var(--secondary-hover); }
         button:disabled { background-color: #b0b7bf; cursor: not-allowed; }
-
         .btn-danger { background-color: var(--error); }
         .btn-danger:hover { background-color: #b71c1c; }
-
         .btn-neutral { background-color: #7f8c8d; }
         .btn-neutral:hover { background-color: #6c7a7b; }
-
-        .link-button {
-            background: none;
-            border: none;
-            color: var(--primary-dark);
-            font-size: 0.92rem;
-            font-weight: 600;
-            padding: 0;
-            min-height: auto;
-            width: auto;
-            text-decoration: underline;
-            cursor: pointer;
-            align-self: center;
-        }
-
-        .link-button:hover {
-            background: none;
-            color: var(--secondary);
-        }
-
         .admin-table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            margin-top: 1rem;
-            border-radius: 12px;
-            overflow: hidden;
-            min-width: 700px;
-        }
-
-        th, td {
-            border: 1px solid var(--border);
-            padding: 12px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        th {
-            background-color: #dff3f1;
-            color: var(--primary-dark);
-        }
-
-        .cell-occupied {
-            background-color: #ffe7d6;
-            cursor: pointer;
-            font-weight: 600;
-            color: #8a4b18;
-        }
-
-        .cell-free {
-            color: var(--accent);
-            font-weight: bold;
-            background-color: #edf8ee;
-        }
-
-        .reserva-item {
-            background: #e0f2f1;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 0.7rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid var(--primary);
-            gap: 1rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.45);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 14px;
-            max-width: 560px;
-            width: 100%;
-            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-            border-top: 6px solid var(--primary);
-        }
-
-        .sala-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .sala-card {
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 14px;
-            text-align: center;
-            background: linear-gradient(180deg, #ffffff 0%, #f5fbfb 100%);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
-        }
-
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 1rem; border-radius: 12px; overflow: hidden; min-width: 700px; }
+        th, td { border: 1px solid var(--border); padding: 12px; text-align: center; font-size: 0.9rem; }
+        th { background-color: #dff3f1; color: var(--primary-dark); }
+        .cell-occupied { background-color: #ffe7d6; cursor: pointer; font-weight: 600; color: #8a4b18; }
+        .cell-free { color: var(--accent); font-weight: bold; background-color: #edf8ee; }
+        .reserva-item { background: #e0f2f1; padding: 1rem; border-radius: 10px; margin-bottom: 0.7rem; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary); gap: 1rem; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+        .modal-content { background: white; padding: 2rem; border-radius: 14px; max-width: 560px; width: 100%; box-shadow: 0 10px 24px rgba(0,0,0,0.18); border-top: 6px solid var(--primary); }
+        .sala-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .sala-card { border: 1px solid var(--border); padding: 1.5rem; border-radius: 14px; text-align: center; background: linear-gradient(180deg, #ffffff 0%, #f5fbfb 100%); box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
         .sala-card h3 { color: var(--primary-dark); margin-bottom: 0.6rem; }
-
-        .aviso-reserva {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffe08a;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        .reglas-uso {
-            background: var(--warning-bg);
-            border: 1px solid var(--warning-border);
-            border-radius: 12px;
-            padding: 1rem;
-            color: #6d4c00;
-        }
-
-        .reglas-uso h4 {
-            margin-top: 0;
-            margin-bottom: 0.7rem;
-            color: #7a5a00;
-        }
-
+        .aviso-reserva { background: #fff3cd; color: #856404; border: 1px solid #ffe08a; padding: 1rem; border-radius: 10px; margin-top: 1rem; }
+        .reglas-uso { background: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: 12px; padding: 1rem; color: #6d4c00; }
+        .reglas-uso h4 { margin-top: 0; margin-bottom: 0.7rem; color: #7a5a00; }
         .reglas-uso ul { margin: 0; padding-left: 1.2rem; }
         .reglas-uso li { margin-bottom: 0.4rem; }
-
-        .confirmacion-reserva {
-            display: none;
-            background: var(--success-bg);
-            border: 1px solid var(--success-border);
-            border-left: 6px solid var(--accent);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1.2rem;
-            color: #1b5e20;
-        }
-
+        .confirmacion-reserva { display: none; background: var(--success-bg); border: 1px solid var(--success-border); border-left: 6px solid var(--accent); border-radius: 12px; padding: 1rem; margin-top: 1.2rem; color: #1b5e20; }
         .confirmacion-reserva h4 { margin-top: 0; margin-bottom: 0.7rem; }
         .confirmacion-reserva p { margin: 0.35rem 0; color: #1b5e20; }
-
-        .stats-admin {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0 1.5rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(180deg, #ffffff 0%, #f2fbfa 100%);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.2rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
-        }
-
-        .stat-card h4 {
-            margin: 0 0 0.4rem 0;
-            color: var(--primary-dark);
-            font-size: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--secondary);
-        }
-
-        .estado-pill {
-            display: inline-block;
-            margin-top: 0.6rem;
-            padding: 0.35rem 0.7rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
+        .stats-admin { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+        .stat-card { background: linear-gradient(180deg, #ffffff 0%, #f2fbfa 100%); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
+        .stat-card h4 { margin: 0 0 0.4rem 0; color: var(--primary-dark); font-size: 1rem; }
+        .stat-number { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+        .estado-pill { display: inline-block; margin-top: 0.6rem; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
         .estado-libre { background: #edf8ee; color: #2e7d32; }
         .estado-parcial { background: #fff3cd; color: #8a6d1d; }
         .estado-ocupada { background: #ffe7d6; color: #8a4b18; }
-
-        .integrante-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-            align-items: center;
-        }
-
-        .integrante-grid.headers {
-            margin-bottom: 0.2rem;
-            align-items: end;
-        }
-
-        .integrante-header {
-            font-size: 0.88rem;
-            color: var(--primary-dark);
-            font-weight: 700;
-            text-align: left;
-            padding-left: 0.1rem;
-        }
-
-        .info-turnos, .info-box {
-            background: var(--info-bg);
-            border: 1px solid var(--info-border);
-            color: #16597a;
-            padding: 0.9rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #dbe8e8;
-            margin: 1rem 0 1.5rem;
-        }
-
+        .integrante-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; align-items: center; }
+        .integrante-grid.headers { margin-bottom: 0.2rem; align-items: end; }
+        .integrante-header { font-size: 0.88rem; color: var(--primary-dark); font-weight: 700; text-align: left; padding-left: 0.1rem; }
+        hr { border: none; border-top: 1px solid #dbe8e8; margin: 1rem 0 1.5rem; }
         h1, h2, h3, h4 { margin-top: 0; }
         p { color: var(--text-soft); }
         .small-text { font-size: 0.9rem; color: var(--text-soft); }
-
+        .info-turnos { background: #e8f4fd; border: 1px solid #b9def5; color: #16597a; padding: 0.9rem; border-radius: 10px; margin-top: 1rem; }
+        .loading { text-align: center; padding: 2rem; color: var(--text-soft); font-style: italic; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #ccc; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
             .container { margin: 1rem auto; padding: 0 0.8rem; }
             .card { padding: 1.2rem; border-radius: 12px; }
             .navbar h1 { font-size: 1.2rem; line-height: 1.4; }
-            .login-form, .register-form { max-width: 100%; }
+            .login-form { max-width: 100%; }
             .sala-grid, .stats-admin { grid-template-columns: 1fr; }
             .integrante-grid { grid-template-columns: 1fr; }
             .integrante-grid.headers { grid-template-columns: 1fr 1fr; }
@@ -366,46 +104,23 @@
 
 <div class="container">
 
-    <!-- LOGIN / REGISTRO -->
+    <!-- LOGIN -->
     <div id="view-login" class="view active">
         <div class="card">
-            <div id="panel-login">
-                <h2 style="text-align:center">Acceso de usuarios</h2>
-                <div class="login-form">
-                    <input type="email" id="email" placeholder="Correo institucional">
-                    <input type="password" id="pass" placeholder="Contraseña">
-                    <button onclick="handleLogin()">Entrar</button>
-                    <button class="link-button" onclick="mostrarPanelAuth('registro')">Registrarse</button>
-                    <p style="text-align:center; font-size:0.8rem; color:#888">
-                        Admin: admin@u.cl | Pass: admin123<br>
-                        Estudiantes: @alumnos.santotomas.cl<br>
-                        Profesores: @santotomas.cl
-                    </p>
-                </div>
-            </div>
-
-            <div id="panel-register" style="display:none;">
-                <h2 style="text-align:center">Registro de usuarios</h2>
-                <div class="register-form">
-                    <input type="text" id="reg-nombre" placeholder="Nombre completo">
-                    <input type="text" id="reg-rut" placeholder="RUT (ej: 12345678-9)">
-                    <input type="email" id="reg-email" placeholder="Correo institucional">
-                    <input type="password" id="reg-pass" placeholder="Contraseña">
-                    <input type="password" id="reg-pass2" placeholder="Confirmar contraseña">
-                    <button onclick="handleRegister()">Crear cuenta</button>
-                    <button class="link-button" onclick="mostrarPanelAuth('login')">Volver a iniciar sesión</button>
-
-                    <div class="info-box">
-                        <b>Tipos de registro permitidos:</b><br>
-                        - Estudiantes: <b>@alumnos.santotomas.cl</b><br>
-                        - Profesores: <b>@santotomas.cl</b>
-                    </div>
-                </div>
+            <h2 style="text-align:center">Acceso Estudiantes</h2>
+            <div class="login-form">
+                <input type="email" id="email" placeholder="ejemplo@alumnos.santotomas.cl">
+                <input type="password" id="pass" placeholder="Contraseña">
+                <button onclick="handleLogin()">Entrar</button>
+                <p style="text-align:center; font-size:0.8rem; color:#888">
+                    Admin: admin@u.cl | Pass: admin123<br>
+                    Usuarios: @alumnos.santotomas.cl o @santotomas.cl
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- VISTA USUARIO -->
+    <!-- VISTA ALUMNO -->
     <div id="view-alumno" class="view">
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
@@ -413,26 +128,23 @@
                     <h3 style="margin-bottom:0.2rem;">Salas disponibles hoy</h3>
                     <p class="small-text" id="user-display" style="margin:0;"></p>
                 </div>
-                <button onclick="cerrarSesion()" class="btn-danger" style="width:auto;">Cerrar sesión</button>
+                <button onclick="location.reload()" class="btn-danger" style="width:auto;">Cerrar sesión</button>
             </div>
-
             <div class="info-turnos">
-                Puedes reservar máximo <b>2 bloques por día</b>. Cada integrante también puede participar en máximo <b>2 reservas diarias</b>. Si un RUT ya existe en el sistema, se validará usando <b>primer nombre + primer apellido</b>.
+                📋 Puedes reservar máximo <b>2 bloques por día</b>. Cada bloque dura 2 horas.
             </div>
-
             <div id="aviso-limite-turnos" class="aviso-reserva" style="display:none;">
-                Has alcanzado el máximo de 2 reservas por hoy.
+                ⚠️ Has alcanzado el máximo de 2 reservas por hoy.
             </div>
-
-            <div id="lista-salas" class="sala-grid" style="margin-top:1.5rem;"></div>
-
+            <div id="lista-salas" class="sala-grid" style="margin-top:1.5rem;">
+                <div class="loading"><span class="spinner"></span>Cargando salas...</div>
+            </div>
             <div id="section-mis-reservas" style="margin-top:2rem; display:none;">
                 <h4>Mis Reservas para Hoy:</h4>
                 <div id="mis-reservas-container"></div>
             </div>
-
             <div id="confirmacion-reserva" class="confirmacion-reserva">
-                <h4>Reserva confirmada</h4>
+                <h4>✅ Reserva confirmada</h4>
                 <p><b>Sala:</b> <span id="conf-sala"></span></p>
                 <p><b>Bloque:</b> <span id="conf-hora"></span></p>
                 <p><b>Responsable:</b> <span id="conf-user"></span></p>
@@ -450,33 +162,25 @@
             <div style="display:flex; flex-direction:column; gap:1rem;">
                 <p>Selecciona el bloque (Máximo 2 horas):</p>
                 <select id="select-hora"></select>
-
                 <label><b>Integrantes del grupo:</b></label>
                 <div class="integrante-grid headers">
                     <div class="integrante-header">Nombre</div>
                     <div class="integrante-header">RUT</div>
                 </div>
-
                 <div class="integrante-grid">
                     <input type="text" id="integrante1" placeholder="Integrante 1">
                     <input type="text" id="rut1" placeholder="RUT 1 (ej: 12345678-9)">
-
                     <input type="text" id="integrante2" placeholder="Integrante 2">
                     <input type="text" id="rut2" placeholder="RUT 2">
-
                     <input type="text" id="integrante3" placeholder="Integrante 3">
                     <input type="text" id="rut3" placeholder="RUT 3">
-
                     <input type="text" id="integrante4" placeholder="Integrante 4">
                     <input type="text" id="rut4" placeholder="RUT 4">
-
                     <input type="text" id="integrante5" placeholder="Integrante 5">
                     <input type="text" id="rut5" placeholder="RUT 5">
-
                     <input type="text" id="integrante6" placeholder="Integrante 6">
                     <input type="text" id="rut6" placeholder="RUT 6">
                 </div>
-
                 <div class="reglas-uso">
                     <h4>Reglas de uso de la sala</h4>
                     <ul>
@@ -485,36 +189,27 @@
                         <li>Dejar limpio y ordenado al terminar.</li>
                         <li>No exceder la capacidad permitida.</li>
                         <li>Cancelar la reserva si no la usarás.</li>
-                        <li>Se valida coincidencia por primer nombre y primer apellido para cada RUT.</li>
                     </ul>
                 </div>
-
                 <button onclick="finalizarReserva()">Confirmar Reserva</button>
             </div>
         </div>
     </div>
 
-    <!-- VISTA ADMIN -->
+    <!-- VISTA ADMINISTRADOR -->
     <div id="view-admin" class="view">
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
                 <h3>Panel Administrativo</h3>
-                <button onclick="cerrarSesion()" class="btn-danger" style="width:auto;">Salir</button>
+                <button onclick="location.reload()" class="btn-danger" style="width:auto;">Salir</button>
             </div>
-
             <div class="stats-admin">
                 <div class="stat-card">
                     <h4>Total reservas del día</h4>
                     <div class="stat-number" id="stat-total-reservas">0</div>
                 </div>
-                <div class="stat-card">
-                    <h4>Usuarios registrados</h4>
-                    <div class="stat-number" id="stat-total-usuarios">0</div>
-                </div>
             </div>
-
             <p>Haz clic en las celdas ocupadas para ver participantes y RUT.</p>
-
             <div class="admin-table-container">
                 <table id="tabla-admin">
                     <thead><tr id="header-admin"></tr></thead>
@@ -542,17 +237,20 @@
 </div>
 
 <script>
+    // ─────────────────────────────────────────────
+    // IMPORTANTE: Reemplaza esta URL con la de tu backend en Render
+    // ─────────────────────────────────────────────
     const API_URL = "https://ust-reserves.onrender.com";
     const BLOQUES = ["08:00 - 10:00","10:00 - 12:00","12:00 - 14:00","14:00 - 16:00","16:00 - 18:00","18:00 - 20:00"];
-    const DOMINIO_ESTUDIANTE = "@alumnos.santotomas.cl";
-    const DOMINIO_PROFESOR = "@santotomas.cl";
+    const DOMINIOS_PERMITIDOS = ["@alumnos.santotomas.cl","@santotomas.cl"];
     const MAX_TURNOS_POR_DIA = 2;
     const MAX_RESERVAS_POR_RUT = 2;
 
     let reservasHoy = [];
-    let currentUser = null;
+    let currentUser = "";
     let salaSeleccionada = 0;
-    let usuariosRegistrados = JSON.parse(localStorage.getItem("ust_usuarios_registrados")) || [];
+
+    // ─── API ──────────────────────────────────────
 
     async function fetchReservas() {
         const res = await fetch(`${API_URL}/reservas`);
@@ -572,26 +270,11 @@
         await fetch(`${API_URL}/reservas/${id}`, { method: "DELETE" });
     }
 
-    function saveUsuarios() {
-        localStorage.setItem("ust_usuarios_registrados", JSON.stringify(usuariosRegistrados));
-    }
+    // ─── HELPERS ──────────────────────────────────
 
     function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-    }
-
-    function mostrarPanelAuth(tipo) {
-        const panelLogin = document.getElementById("panel-login");
-        const panelRegister = document.getElementById("panel-register");
-
-        if (tipo === "login") {
-            panelLogin.style.display = "block";
-            panelRegister.style.display = "none";
-        } else {
-            panelLogin.style.display = "none";
-            panelRegister.style.display = "block";
-        }
     }
 
     function normalizarRut(rut) {
@@ -604,157 +287,8 @@
         return limpio.slice(0, -1) + "-" + limpio.slice(-1);
     }
 
-    function getNombreBase(nombre) {
-        const limpio = nombre.trim().replace(/\s+/g, " ");
-        const partes = limpio.split(" ").filter(Boolean);
-        if (partes.length === 0) return "";
-        if (partes.length === 1) return partes[0].toUpperCase();
-        return `${partes[0]} ${partes[1]}`.toUpperCase();
-    }
-
-    function determinarTipoUsuario(email) {
-        if (email.endsWith(DOMINIO_ESTUDIANTE)) return "Estudiante";
-        if (email.endsWith(DOMINIO_PROFESOR)) return "Profesor";
-        return null;
-    }
-
-    function buscarUsuarioPorEmail(email) {
-        return usuariosRegistrados.find(u => u.email === email);
-    }
-
-    function buscarUsuarioPorRut(rutNormalizado) {
-        return usuariosRegistrados.find(u => u.rutNormalizado === rutNormalizado);
-    }
-
-    function getNombreRegistradoPorRut(rutNormalizado) {
-        const usuario = buscarUsuarioPorRut(rutNormalizado);
-        if (usuario) return usuario.nombre;
-
-        for (const reserva of reservasHoy) {
-            const data = reserva.integrantes_data || reserva.integrantesData || [];
-            for (const integrante of data) {
-                if (integrante.rutNormalizado === rutNormalizado) {
-                    return integrante.nombre;
-                }
-            }
-        }
-        return null;
-    }
-
-    function handleRegister() {
-        const nombre = document.getElementById("reg-nombre").value.trim();
-        const rut = document.getElementById("reg-rut").value.trim();
-        const email = document.getElementById("reg-email").value.trim().toLowerCase();
-        const pass = document.getElementById("reg-pass").value;
-        const pass2 = document.getElementById("reg-pass2").value;
-
-        if (!nombre || !rut || !email || !pass || !pass2) {
-            alert("Debes completar todos los campos del registro.");
-            return;
-        }
-
-        const tipo = determinarTipoUsuario(email);
-        if (!tipo) {
-            alert("Solo se aceptan correos @alumnos.santotomas.cl para estudiantes y @santotomas.cl para profesores.");
-            return;
-        }
-
-        if (pass.length < 4) {
-            alert("La contraseña debe tener al menos 4 caracteres.");
-            return;
-        }
-
-        if (pass !== pass2) {
-            alert("Las contraseñas no coinciden.");
-            return;
-        }
-
-        const rutNormalizado = normalizarRut(rut);
-        const nombreBase = getNombreBase(nombre);
-
-        if (buscarUsuarioPorEmail(email)) {
-            alert("Ese correo ya está registrado.");
-            return;
-        }
-
-        const usuarioPorRut = buscarUsuarioPorRut(rutNormalizado);
-        if (usuarioPorRut) {
-            alert("Ese RUT ya está registrado.");
-            return;
-        }
-
-        const nombreExistente = getNombreRegistradoPorRut(rutNormalizado);
-        if (nombreExistente && getNombreBase(nombreExistente) !== nombreBase) {
-            alert("Ese RUT ya está asociado a otro nombre.");
-            return;
-        }
-
-        usuariosRegistrados.push({
-            nombre: nombre.trim(),
-            nombreBase,
-            rut: formatearRut(rut),
-            rutNormalizado,
-            email,
-            password: pass,
-            tipo
-        });
-
-        saveUsuarios();
-
-        document.getElementById("reg-nombre").value = "";
-        document.getElementById("reg-rut").value = "";
-        document.getElementById("reg-email").value = "";
-        document.getElementById("reg-pass").value = "";
-        document.getElementById("reg-pass2").value = "";
-
-        alert("Cuenta creada correctamente. Ahora puedes iniciar sesión.");
-        mostrarPanelAuth("login");
-    }
-
-    async function handleLogin() {
-        const email = document.getElementById('email').value.trim().toLowerCase();
-        const pass = document.getElementById('pass').value;
-
-        if (email === "admin@u.cl" && pass === "admin123") {
-            document.getElementById('main-nav').classList.add('admin-mode');
-            currentUser = { nombre: "Administrador", email: "admin@u.cl", tipo: "Administrador" };
-            await fetchReservas();
-            renderAdminTable();
-            showView('view-admin');
-            return;
-        }
-
-        const usuario = usuariosRegistrados.find(u => u.email === email && u.password === pass);
-
-        if (!usuario) {
-            alert("Correo o contraseña incorrectos.");
-            return;
-        }
-
-        currentUser = usuario;
-        document.getElementById('main-nav').classList.remove('admin-mode');
-        document.getElementById('user-display').innerText = `${usuario.nombre} | ${usuario.email} | ${usuario.tipo}`;
-        await fetchReservas();
-        renderSalasAlumno();
-        renderMisReservas();
-        hideConfirmacionReserva();
-        showView('view-alumno');
-    }
-
-    function cerrarSesion() {
-        currentUser = null;
-        salaSeleccionada = 0;
-        document.getElementById('main-nav').classList.remove('admin-mode');
-        hideConfirmacionReserva();
-        document.getElementById('email').value = "";
-        document.getElementById('pass').value = "";
-        showView('view-login');
-        mostrarPanelAuth("login");
-    }
-
     function getMisTurnosHoy() {
-        if (!currentUser) return 0;
-        return reservasHoy.filter(r => r.usuario === currentUser.email).length;
+        return reservasHoy.filter(r => r.usuario === currentUser).length;
     }
 
     function usuarioLlegoAlMaximo() {
@@ -764,10 +298,11 @@
     function getCantidadReservasPorRut(rutNormalizado) {
         let cantidad = 0;
         reservasHoy.forEach(reserva => {
-            const data = reserva.integrantes_data || reserva.integrantesData || [];
-            data.forEach(integrante => {
-                if (integrante.rutNormalizado === rutNormalizado) cantidad++;
-            });
+            if (reserva.integrantes_data) {
+                reserva.integrantes_data.forEach(integrante => {
+                    if (integrante.rutNormalizado === rutNormalizado) cantidad++;
+                });
+            }
         });
         return cantidad;
     }
@@ -783,18 +318,46 @@
         return { texto: `${disponibles} bloque(s) libre(s)`, clase: "estado-parcial" };
     }
 
+    // ─── LOGIN ────────────────────────────────────
+
+    async function handleLogin() {
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const pass = document.getElementById('pass').value;
+
+        if (email === "admin@u.cl" && pass === "admin123") {
+            document.getElementById('main-nav').classList.add('admin-mode');
+            await fetchReservas();
+            renderAdminTable();
+            showView('view-admin');
+            return;
+        }
+
+        const dominioValido = DOMINIOS_PERMITIDOS.some(d => email.endsWith(d));
+        if (dominioValido && pass.length > 3) {
+            currentUser = email;
+            document.getElementById('user-display').innerText = email;
+            await fetchReservas();
+            renderSalasAlumno();
+            renderMisReservas();
+            hideConfirmacionReserva();
+            showView('view-alumno');
+        } else {
+            alert("Correo o contraseña incorrectos.");
+        }
+    }
+
+    // ─── VISTAS ALUMNO ────────────────────────────
+
     function renderSalasAlumno() {
         const grid = document.getElementById('lista-salas');
         const aviso = document.getElementById('aviso-limite-turnos');
         grid.innerHTML = '';
-
         const llegoAlMaximo = usuarioLlegoAlMaximo();
         aviso.style.display = llegoAlMaximo ? 'block' : 'none';
 
         for (let i = 1; i <= 7; i++) {
             const bloquesDisponibles = getCantidadBloquesDisponiblesSala(i);
             const estado = getEstadoSala(i);
-
             grid.innerHTML += `
                 <div class="sala-card">
                     <h3>Sala ${i}</h3>
@@ -812,8 +375,7 @@
     function renderMisReservas() {
         const container = document.getElementById('mis-reservas-container');
         const section = document.getElementById('section-mis-reservas');
-
-        const misR = reservasHoy.filter(r => currentUser && r.usuario === currentUser.email);
+        const misR = reservasHoy.filter(r => r.usuario === currentUser);
 
         if (misR.length > 0) {
             section.style.display = 'block';
@@ -833,64 +395,33 @@
     }
 
     function prepararReserva(num) {
-        if (usuarioLlegoAlMaximo()) {
-            alert("Solo puedes agendar máximo 2 turnos al día.");
-            return;
-        }
-
+        if (usuarioLlegoAlMaximo()) { alert("Solo puedes agendar máximo 2 turnos al día."); return; }
         salaSeleccionada = num;
         document.getElementById('registro-titulo').innerText = `Agendar Sala ${num}`;
         const select = document.getElementById('select-hora');
         select.innerHTML = '';
-
         BLOQUES.forEach(h => {
             const ocupada = reservasHoy.find(r => r.sala == num && r.hora == h);
             if (!ocupada) {
                 const opt = document.createElement('option');
-                opt.value = h;
-                opt.innerText = h;
+                opt.value = h; opt.innerText = h;
                 select.appendChild(opt);
             }
         });
-
-        if (select.options.length === 0) {
-            alert("No hay bloques disponibles para esta sala hoy.");
-            return;
-        }
-
+        if (select.options.length === 0) { alert("No hay bloques disponibles para esta sala hoy."); return; }
         showView('view-registro');
     }
 
     function obtenerIntegrantesDesdeFormulario() {
         const integrantes = [];
-
         for (let i = 1; i <= 6; i++) {
             const nombre = document.getElementById(`integrante${i}`).value.trim();
             const rut = document.getElementById(`rut${i}`).value.trim();
-
             if (nombre !== "" || rut !== "") {
-                if (nombre === "" || rut === "") {
-                    alert(`Debes completar nombre y RUT del integrante ${i}.`);
-                    return null;
-                }
-
-                const rutNormalizado = normalizarRut(rut);
-                const nombreBase = getNombreBase(nombre);
-                const nombreRegistrado = getNombreRegistradoPorRut(rutNormalizado);
-
-                if (nombreRegistrado && getNombreBase(nombreRegistrado) !== nombreBase) {
-                    alert(`El nombre del integrante ${i} no coincide con el nombre registrado para ese RUT.`);
-                    return null;
-                }
-
-                integrantes.push({
-                    nombre: nombre.trim(),
-                    rut: formatearRut(rut),
-                    rutNormalizado
-                });
+                if (nombre === "" || rut === "") { alert(`Debes completar nombre y RUT del integrante ${i}.`); return null; }
+                integrantes.push({ nombre, rut: formatearRut(rut), rutNormalizado: normalizarRut(rut) });
             }
         }
-
         return integrantes;
     }
 
@@ -903,40 +434,27 @@
 
     async function finalizarReserva() {
         const hora = document.getElementById('select-hora').value;
-
-        if (usuarioLlegoAlMaximo()) {
-            alert("Solo puedes agendar máximo 2 turnos al día.");
-            showView('view-alumno');
-            return;
-        }
+        if (usuarioLlegoAlMaximo()) { alert("Solo puedes agendar máximo 2 turnos al día."); showView('view-alumno'); return; }
 
         const integrantes = obtenerIntegrantesDesdeFormulario();
-        if (!integrantes || integrantes.length === 0) {
-            alert("Debes ingresar al menos un integrante con nombre y RUT.");
-            return;
-        }
+        if (!integrantes || integrantes.length === 0) { alert("Debes ingresar al menos un integrante con nombre y RUT."); return; }
 
         const rutsIngresados = integrantes.map(i => i.rutNormalizado);
-        if (new Set(rutsIngresados).size !== rutsIngresados.length) {
-            alert("No puedes repetir el mismo RUT dentro del grupo.");
-            return;
-        }
+        if (new Set(rutsIngresados).size !== rutsIngresados.length) { alert("No puedes repetir el mismo RUT dentro del grupo."); return; }
 
         for (const rut of rutsIngresados) {
             if (getCantidadReservasPorRut(rut) >= MAX_RESERVAS_POR_RUT) {
-                alert("Uno de los integrantes ya alcanzó el máximo de 2 reservas diarias.");
-                return;
+                alert("Uno de los integrantes ya alcanzó el máximo de 2 reservas diarias."); return;
             }
         }
 
-        const integrantesDetalle = integrantes.map(i => `${i.nombre} - ${i.rut}`).join('\\n');
-
+        const integrantesDetalle = integrantes.map(i => `${i.nombre} - ${i.rut}`).join('\n');
         const nuevaReserva = {
             id: `s${salaSeleccionada}-${hora.replace(/ /g,'')}-${Date.now()}`,
             sala: salaSeleccionada,
             hora,
-            usuario: currentUser.email,
-            integrantes: integrantes.map(i => i.nombre).join('\\n'),
+            usuario: currentUser,
+            integrantes: integrantes.map(i => i.nombre).join('\n'),
             integrantesDetalle,
             integrantesData: integrantes
         };
@@ -944,8 +462,7 @@
         const res = await crearReserva(nuevaReserva);
         if (!res.ok) {
             const err = await res.json();
-            alert(err.error || "Error al reservar.");
-            return;
+            alert(err.error || "Error al reservar."); return;
         }
 
         await fetchReservas();
@@ -966,16 +483,14 @@
         }
     }
 
+    // ─── VISTA ADMIN ──────────────────────────────
+
     function renderAdminTable() {
         const header = document.getElementById('header-admin');
         const body = document.getElementById('body-admin');
-
         document.getElementById('stat-total-reservas').innerText = reservasHoy.length;
-        document.getElementById('stat-total-usuarios').innerText = usuariosRegistrados.length;
-
         header.innerHTML = '<th>Bloques</th>' + [1,2,3,4,5,6,7].map(n => `<th>Sala ${n}</th>`).join('');
         body.innerHTML = '';
-
         BLOQUES.forEach(hora => {
             let row = `<tr><td><b>${hora}</b></td>`;
             for (let s = 1; s <= 7; s++) {
@@ -994,12 +509,10 @@
     function verDetalle(resId) {
         const res = reservasHoy.find(r => r.id === resId);
         if (!res) return;
-
         document.getElementById('det-user').innerText = res.usuario;
         document.getElementById('det-hora').innerText = res.hora;
-        document.getElementById('det-integrantes').innerText = res.integrantes_detalle || res.integrantesDetalle || res.integrantes;
+        document.getElementById('det-integrantes').innerText = res.integrantes_detalle || res.integrantes;
         document.getElementById('modal-detalle').style.display = 'flex';
-
         document.getElementById('btn-liberar-admin').onclick = async function() {
             if (confirm("¿Liberar esta sala administrativamente?")) {
                 await eliminarReserva(resId);
@@ -1010,14 +523,8 @@
         };
     }
 
-    function cerrarModal() {
-        document.getElementById('modal-detalle').style.display = 'none';
-    }
-
-    function hideConfirmacionReserva() {
-        document.getElementById('confirmacion-reserva').style.display = 'none';
-    }
-
+    function cerrarModal() { document.getElementById('modal-detalle').style.display = 'none'; }
+    function hideConfirmacionReserva() { document.getElementById('confirmacion-reserva').style.display = 'none'; }
     function mostrarConfirmacionReserva(reserva) {
         document.getElementById('conf-sala').innerText = reserva.sala;
         document.getElementById('conf-hora').innerText = reserva.hora;
@@ -1026,17 +533,10 @@
         document.getElementById('confirmacion-reserva').style.display = 'block';
     }
 
+    // Enter para login
     document.addEventListener('keydown', e => {
-        if (
-            e.key === 'Enter' &&
-            document.getElementById('view-login').classList.contains('active') &&
-            document.getElementById('panel-login').style.display !== 'none'
-        ) {
-            handleLogin();
-        }
+        if (e.key === 'Enter' && document.getElementById('view-login').classList.contains('active')) handleLogin();
     });
-
-    mostrarPanelAuth("login");
 </script>
 </body>
 </html>

@@ -15,3 +15,4 @@ jobs:
           node-version: '22'
       - run: python -m unittest discover -s tests -v
       - run: node --check static/app.js
+      - run: node scripts/build-static.mjs

@@ -66,7 +66,7 @@ class SystemTests(unittest.TestCase):
         response={}
         def start(status,headers):response.update(status=int(status.split()[0]),headers=dict(headers))
         payload=b''.join(self.web(env,start))
-        response['body']=json.loads(payload) if 'application/json' in response['headers']['Content-Type'] else payload
+        response['body']=json.loads(payload) if payload and 'application/json' in response['headers']['Content-Type'] else payload
         return response
 
     def session(self,user=None):
@@ -147,6 +147,14 @@ class SystemTests(unittest.TestCase):
         for flag in ['HttpOnly','SameSite=Lax','Secure']:self.assertIn(flag,response['headers']['Set-Cookie'])
         self.assertEqual(response['headers']['Cache-Control'],'no-store')
         self.assertIn("script-src 'self'",response['headers']['Content-Security-Policy'])
+
+    def test_head_requests_have_get_headers_without_body(self):
+        for path in ['/', '/health', '/static/app.js', '/static/style.css']:
+            head = self.request(path, 'HEAD')
+            get = self.request(path)
+            self.assertEqual(head['status'], 200)
+            self.assertEqual(head['headers']['Content-Length'], get['headers']['Content-Length'])
+            self.assertEqual(head['body'], b'')
 
     def test_http_booking_and_cancel_flow(self):
         raw,session=self.session()
@@ -284,7 +292,7 @@ class SystemTests(unittest.TestCase):
     def test_bad_json_large_body_and_legacy_routes_rejected(self):
         self.assertEqual(self.request('/api/login','POST',raw=b'{broken')['status'],400)
         self.assertEqual(self.request('/api/login','POST',raw=b'a'*17000)['status'],413)
-        self.assertEqual(self.request('/reservas')['status'],404)
+        self.assertEqual(self.request('/reservas')['status'],410)
 
     def test_legacy_database_is_not_silently_overwritten(self):
         with self.db.transaction(write=True) as q:

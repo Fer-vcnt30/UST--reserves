@@ -4,7 +4,9 @@ Fecha: 9 de octubre de 2026. Base de referencia: commit c66a314 del repositorio 
 
 ## Resultado automatizado
 
-38 pruebas aprobadas con Python y SQLite, incluyendo solicitudes WSGI directamente a la aplicación. Ver código reproducible en `tests/test_system.py`.
+47 pruebas aprobadas con Python y SQLite, incluyendo solicitudes WSGI directamente a la aplicación y errores de configuración al iniciar. Ver código reproducible en `tests/test_system.py` y `tests/test_startup.py`.
+
+La corrección de despliegue añade nueve pruebas sobre `HEAD`, origen de Render/Netlify, variables ausentes, recuperación tras configurar y errores de base sin exposición de secretos. La compilación estática de Netlify (`node scripts/build-static.mjs`) también finaliza correctamente. Esto no confirma un despliegue operativo: deben configurarse las variables en Render y desplegar el proxy en Netlify.
 
 | Brecha | Control incorporado | Evidencia |
 |---|---|---|

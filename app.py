@@ -42,10 +42,12 @@ class Application:
         body = payload if isinstance(payload, bytes) else json.dumps(payload, ensure_ascii=False).encode('utf-8')
         headers.extend([('Content-Type', mime + '; charset=utf-8'), ('Content-Length', str(len(body)))])
         start_response(f'{status} {HTTPStatus(status).phrase}', headers)
-        return [body]
+        return [] if env.get('REQUEST_METHOD') == 'HEAD' else [body]
 
     def dispatch(self, env):
         path, method = env.get('PATH_INFO', '/'), env.get('REQUEST_METHOD', 'GET')
+        if method == 'HEAD':
+            method = 'GET'
         static = {'/': ('index.html', 'text/html'), '/static/app.js': ('static/app.js', 'text/javascript'),
                   '/static/style.css': ('static/style.css', 'text/css')}
         if path in static:
@@ -57,6 +59,8 @@ class Application:
             with self.service.db.transaction() as q:
                 q.one('SELECT 1 AS ok')
             return 200, {'status': 'ok'}, [], 'application/json'
+        if path == '/reservas' or path.startswith('/reservas/'):
+            raise Problem('Esta dirección pertenece a la versión anterior. Recarga la web e ingresa con tu cuenta para usar el sistema actualizado.', 410)
         if not path.startswith('/api/'):
             raise Problem('No se encontró esta dirección.', 404)
         if method not in ('GET', 'POST'):
@@ -130,19 +134,51 @@ class Application:
 _application = None
 _lock = threading.Lock()
 
+class StartupConfigurationError(RuntimeError):
+    pass
+
+def production_origin(environ):
+    origin = (environ.get('APP_ORIGIN') or environ.get('RENDER_EXTERNAL_URL') or '').strip()
+    missing = []
+    if not origin:
+        missing.append('APP_ORIGIN (o RENDER_EXTERNAL_URL en Render)')
+    if not environ.get('DATABASE_URL', '').strip():
+        missing.append('DATABASE_URL')
+    if missing:
+        raise StartupConfigurationError('Falta configurar: ' + ', '.join(missing))
+    parts = urlsplit(origin)
+    if (parts.scheme != 'https' or not parts.hostname or parts.username or parts.password
+            or parts.path not in ('', '/') or parts.query or parts.fragment or any(c.isspace() for c in origin)):
+        raise StartupConfigurationError('APP_ORIGIN debe ser un origen HTTPS válido, sin ruta ni credenciales.')
+    return origin.rstrip('/')
+
+def unavailable(env, start_response, message):
+    body = json.dumps({'error': message}, ensure_ascii=False).encode('utf-8')
+    start_response('503 Service Unavailable', [
+        ('Content-Type', 'application/json; charset=utf-8'),
+        ('Content-Length', str(len(body))), ('Cache-Control', 'no-store'),
+        ('X-Content-Type-Options', 'nosniff'), ('Retry-After', '30')])
+    return [] if env.get('REQUEST_METHOD') == 'HEAD' else [body]
+
 def app(env, start_response):
     """Inicialización única por worker; no se crea ninguna contraseña por defecto."""
     global _application
-    if _application is None:
-        with _lock:
-            if _application is None:
-                origin = os.environ.get('APP_ORIGIN', '')
-                if not origin.startswith('https://') or not os.environ.get('DATABASE_URL'):
-                    raise RuntimeError('Producción requiere APP_ORIGIN=https://... y DATABASE_URL. Para desarrollo usa python manage.py serve.')
-                parts = urlsplit(origin)
-                if parts.path not in ('', '/') or parts.query or parts.fragment:
-                    raise RuntimeError('APP_ORIGIN debe contener solamente el origen HTTPS, sin ruta.')
-                db = Database()
-                db.initialize()
-                _application = Application(Service(db), origin=origin, secure=True)
+    try:
+        if _application is None:
+            with _lock:
+                if _application is None:
+                    origin = production_origin(os.environ)
+                    db = Database()
+                    db.initialize()
+                    _application = Application(Service(db), origin=origin, secure=True)
+    except StartupConfigurationError as error:
+        logging.error('Configuración incompleta: %s', error)
+        return unavailable(env, start_response, 'Servicio pendiente de configuración. Revisa APP_ORIGIN y DATABASE_URL en Render.')
+    except RuntimeError:
+        logging.error('La inicialización fue detenida. Revisa la base de datos y si contiene reservas de la versión anterior.')
+        return unavailable(env, start_response, 'La base de datos requiere revisión antes de activar el sistema. Contacta al encargado.')
+    except Exception as error:
+        # No volcar cadenas de conexión o secretos a la respuesta ni a los logs.
+        logging.error('No se pudo inicializar el servicio (%s). Revisa la conexión PostgreSQL y las dependencias.', type(error).__name__)
+        return unavailable(env, start_response, 'No se pudo conectar con el servicio de reservas. Intenta nuevamente más tarde.')
     return _application(env, start_response)

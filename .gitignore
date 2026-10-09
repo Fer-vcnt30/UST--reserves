@@ -5,3 +5,4 @@ __pycache__/
 instance/
 *.sqlite3*
 coverage/
+dist/

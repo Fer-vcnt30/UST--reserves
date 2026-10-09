@@ -76,12 +76,32 @@ No reemplazar la web actual sin revisar y probar esta versión. El paquete no co
 2. Crear un servicio web Python con el código de esta versión.
 3. Comando de instalación: `pip install -r requirements.txt`.
 4. Comando de inicio: `gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT`.
-5. Configurar `DATABASE_URL` con la conexión del nuevo piloto y `APP_ORIGIN` con el origen HTTPS exacto del servicio (sin ruta).
+5. Configurar `DATABASE_URL` con la conexión del nuevo piloto y `APP_ORIGIN` con el origen HTTPS exacto donde se abre la web (sin ruta). Para Netlify, usar `https://reservaust.netlify.app`. Si se usa únicamente Render y no se define `APP_ORIGIN`, se utiliza `RENDER_EXTERNAL_URL`, proporcionado por Render.
 6. `DB_SSLMODE` usa `require`. Para verificar el certificado y el nombre del servidor, configurar `verify-full` y la CA apropiada según el proveedor de PostgreSQL. No deshabilitar TLS.
 7. Desde la consola privada del servicio, ejecutar `python manage.py create-admin`.
 8. Probar registro, aprobación, reservas desde dos navegadores, cancelación, cierre de sesión y persistencia tras reiniciar.
 
-La antigua separación entre Netlify y Render cambia: esta versión sirve ambos componentes desde Render, lo que simplifica y protege las cookies. Publicar únicamente `index.html` en Netlify **no pone en funcionamiento esta versión**. Si se necesita conservar Netlify, debe configurarse un proxy del mismo origen y probar las cookies/CSRF antes de activarlo.
+### Mantener Netlify como dirección de la web
+
+El archivo `netlify.toml` incorpora el proxy `/api/*` hacia `https://ust-reserves.onrender.com/api/*`. El navegador continúa usando la dirección de Netlify para las solicitudes y cookies. El comando `node scripts/build-static.mjs` prepara `dist/` con solo los archivos públicos; no publica Python, pruebas ni bases de datos.
+
+1. En Render → Environment, establecer `APP_ORIGIN=https://reservaust.netlify.app` y verificar que `DATABASE_URL` exista con la conexión PostgreSQL del piloto. No copiar esa conexión al frontend ni al repositorio.
+2. Guardar los cambios y volver a desplegar Render.
+3. En Netlify, desplegar el mismo commit y usar el comando y carpeta de publicación definidos en `netlify.toml` (`node scripts/build-static.mjs` y `dist`).
+4. Abrir la dirección de Netlify. Sin iniciar sesión, `/api/session` debe responder **401 con JSON**, no 404 ni HTML. Ese 401 confirma que la solicitud llegó a la API protegida.
+5. Probar ingreso y cierre de sesión; los POST deben conservar el origen de Netlify y las cookies deben permanecer en ese origen. No es necesario habilitar CORS abierto.
+
+También se puede servir la web directamente desde Render, configurando `APP_ORIGIN` con su dirección. Se debe usar el origen configurado para las operaciones de escritura; si se cambia de proveedor o dominio, actualizarlo.
+
+### Diagnóstico de inicio
+
+- Error antiguo `Producción requiere APP_ORIGIN=https://... y DATABASE_URL`: faltaba alguna de las dos variables. La versión corregida identifica en los logs cuál falta y devuelve 503 sin una excepción no controlada.
+- `HEAD /` y `HEAD /health`: están admitidos, conservan las cabeceras de GET y no devuelven cuerpo.
+- `/reservas`: endpoint retirado; responde 410 y pide recargar la web. No se restablece el acceso anónimo anterior.
+- 503 relacionado con datos anteriores: revisar la sección de migración; no borrar registros para evitar el control.
+- Fallo de conexión: revisar `DATABASE_URL`, disponibilidad del PostgreSQL y dependencias. La aplicación no incluye secretos en la respuesta de error.
+
+Referencias de despliegue: [variables automáticas de Render](https://render.com/docs/environment-variables) y [proxy de Netlify](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/).
 
 ### Datos anteriores
 
